@@ -8,7 +8,7 @@ fi
 app_bundle_id=$1
 echo "Proceeding with app_bundle_id: $app_bundle_id"
 
-KEYCHAIN_DUMPER_FOLDER=/tmp
+KEYCHAIN_DUMPER_FOLDER=.
 if [ ! -d "$KEYCHAIN_DUMPER_FOLDER" ] ; then
   mkdir "$KEYCHAIN_DUMPER_FOLDER" ;
 fi
@@ -57,3 +57,5 @@ cd $KEYCHAIN_DUMPER_FOLDER
 ldid -Sent.xml keychain_dumper
 rm ent.xml
 echo "Entitlements updated"
+echo "Running Keychain Dumper.."
+$KEYCHAIN_DUMPER_FOLDER/keychain_dumper
