@@ -8,7 +8,7 @@ fi
 app_bundle_id=$1
 echo "Proceeding with app_bundle_id: $app_bundle_id"
 
-KEYCHAIN_DUMPER_FOLDER=.
+KEYCHAIN_DUMPER_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ ! -d "$KEYCHAIN_DUMPER_FOLDER" ] ; then
   mkdir "$KEYCHAIN_DUMPER_FOLDER" ;
 fi
