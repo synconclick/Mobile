@@ -1,5 +1,13 @@
 #!/bin/bash
 
+if [[ $# -ne 1 ]]; then
+    echo "Error: Exactly one argument (app_bundle_id) is required. An example would be com.example.app."
+    exit 1
+fi
+
+app_bundle_id=$1
+echo "Proceeding with app_bundle_id: $app_bundle_id"
+
 KEYCHAIN_DUMPER_FOLDER=/tmp
 if [ ! -d "$KEYCHAIN_DUMPER_FOLDER" ] ; then
   mkdir "$KEYCHAIN_DUMPER_FOLDER" ;
@@ -15,22 +23,6 @@ fi
 
 ENTITLEMENT_PATH=$KEYCHAIN_DUMPER_FOLDER/ent.xml
 dbKeychainArray=()
-declare -a invalidKeychainArray=("com.apple.bluetooth"
-        "com.apple.cfnetwork"
-        "com.apple.cloudd"
-        "com.apple.continuity.encryption"
-        "com.apple.continuity.unlock"
-        "com.apple.icloud.searchpartyd"
-        "com.apple.ind"
-        "com.apple.mobilesafari"
-        "com.apple.rapport"
-        "com.apple.sbd"
-        "com.apple.security.sos"
-        "com.apple.siri.osprey"
-        "com.apple.telephonyutilities.callservicesd"
-        "ichat"
-        "wifianalyticsd"
-      )
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > $ENTITLEMENT_PATH
 echo "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" >> $ENTITLEMENT_PATH
@@ -46,7 +38,7 @@ sqlite3 /var/Keychains/keychain-2.db "SELECT DISTINCT agrp FROM genp" > ./allgro
 
 while IFS= read -r line; do
   dbKeychainArray+=("$line")
-    if [[ ! " ${invalidKeychainArray[@]} " =~ " ${line} " ]]; then
+    if [[ ${line} == *"$app_bundle_id"* ]]; then
       echo "      <string>${line}</string>">> $ENTITLEMENT_PATH
   else
     echo "Skipping ${line}"
